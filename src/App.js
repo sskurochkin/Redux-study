@@ -1,55 +1,34 @@
 import React from "react";
-import { createStore } from "redux";
+import { createStore, bindActionCreators } from "redux";
+import * as actions from "./actions";
+import { reducer } from "./reducer";
 
 function App() {
+	const store = createStore(reducer);
+	const { dispatch, subscribe, getState } = store;
 
-    // const initialState = {value : 0}
+	
+	const update = () =>
+		(document.getElementById("counter").textContent =
+			getState().value);
 
-	// const reducer = (state = initialState, action) => {
-	// 	switch (action.type) {
-	// 		case "INC":
-	// 			return {
-    //                 ...state,
-    //                 value: state.value + 1
-    //             };
-	// 		case "DEC":
-	// 			return {
-    //                 ...state,
-    //                 value: state.value - 1
-    //             };
-	// 		case "RND":
-	// 			return {
-    //                 ...state,
-    //                 value: state.value * action.payload
-    //             };
+	subscribe(update);
 
-	// 		default:
-	// 			return state;
-	// 	}
-	// };
+	// const bindActionCreator = (creator, dispatch) => (...args) => {
+	// 	dispatch(creator(...args))
+	// }
 
-	// const store = createStore(reducer);
-	// const update = () =>
-	// 	(document.getElementById("counter").textContent = store.getState().value);
-
-	// store.subscribe(update);
-
-	// const inc = () => ({type: "INC"});
-	// const dec = () => ({type: "DEC"});
-	// const rnd = (value) => ({type: "RND", payload: value});
+	const {inc, dec ,rnd} = bindActionCreators(actions, dispatch)
+	// const decDispatch = bindActionCreators(dec, dispatch)
+	// const rndDispatch = bindActionCreators(rnd, dispatch)
 
 
-	// document.getElementById("inc").addEventListener("click", () => {
-	// 	store.dispatch(inc());
-	// });
-	// document.getElementById("dec").addEventListener("click", () => {
-	// 	store.dispatch(dec());
-	// });
-	// document.getElementById("rnd").addEventListener("click", () => {
-	// 	const value = Math.floor(Math.random() * 10);
-	// 	store.dispatch(rnd(value));
-	// });
-
+	document.getElementById("inc").addEventListener("click", inc);
+	document.getElementById("dec").addEventListener("click", dec);
+	document.getElementById("rnd").addEventListener("click", () => {
+		const value = Math.floor(Math.random() * 10);
+		rnd(value);
+	});
 
 	///////
 	// console.log(store.getState());
@@ -60,14 +39,12 @@ function App() {
 
 	// console.log(state)
 
-// Чистые функции 
+	// Чистые функции
 
-let num = 10
-const rndSum = (a) => num += a // чистая, при вызове с одинаковыми параметрами всегда возвращает одинаковый результат
-console.log(rndSum(5, 10));
-console.log(rndSum(5, 10));
-console.log(rndSum(5, 10));
-
+	// const rndSum = (a, b) => b + a // чистая, при вызове с одинаковыми параметрами всегда возвращает одинаковый результат. Побочные эффекты запрещены
+	// console.log(rndSum(5, 10));
+	// console.log(rndSum(5, 10));
+	// console.log(rndSum(5, 10));
 
 	return (
 		<div>
